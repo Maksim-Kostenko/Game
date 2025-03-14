@@ -2,6 +2,7 @@ import random
 
 class Person:
     __next_id = 1
+    instances = list()
 
     def __new__(cls, *args, **kwargs):
         instance = super().__new__(cls)
@@ -11,6 +12,7 @@ class Person:
 
     def __init__(self):
         self.__name = None
+        Person.instances.append(self)
 
     @property
     def username(self):
@@ -24,9 +26,15 @@ class Person:
             raise ValueError('Имя может содержать только буквы!')
         self.__name = value.title()
 
+    @classmethod
+    def get_instances(cls):
+        return cls.instances
+
 player_1 = Person()
 player_2 = Person()
 
+
+result_selection_first_player = None
 
 def register_players():
 
@@ -65,6 +73,7 @@ def register_players():
 
 def selection_first_player():
     """ Доделать нормально, сделать цикл"""
+    global result_selection_first_player
     option = 'Выбирите способ определения игрока, который будет делать первый ход:\n1-Выбрать игрока случайным образом.'
     print(option)
     try:
@@ -72,7 +81,6 @@ def selection_first_player():
         if selected_option == 1:
             result_selection_first_player = random.choice([player_1.username, player_2.username])
             print(f'{result_selection_first_player} ходит первым!')
-            return result_selection_first_player
         else:
             raise ValueError(f'Некорректный выбор!'
                              f'Введите число из представленных способов'
@@ -88,13 +96,24 @@ def draw_board(board_1):
         print("|", board[0 + i * 3], "|", board[1 + i * 3], "|", board[2 + i * 3], "|")
         print("-" * 13)
 
+def take_position(selection, first_player):
+    pass
 
 
-def main():
+
+def main(board_1):
+    win = False
+
     print('Добро пожаловать в игру "Крестики-нолики!"\nДавайте познакомимся!')
     register_players()
     print('Приступим к выбору игрока, который будет делать первый ход!')
     selection_first_player()
     print('Приступим к игре!')
+    draw_board(board_1)
+
+    while not win:
+        pass
 
 
+if __name__ == '__main__':
+    main(board)
