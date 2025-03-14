@@ -135,10 +135,15 @@ def game(board, first_player, second_player):
 
         tmp = check_win(board)
         if tmp:
-            if (counter + first_player.id) % 2 == 0:
-                print(Person.get_instances()[0].username, "выиграл!")
-                win = True
-                break
+            if tmp == "X":
+                print(first_player.username, "выиграл!")
+            else:
+                print(second_player.username, "выиграл!")
+            win = True
+            break
+        else:
+            print(first_player.username, "выиграл!")
+
         if counter == 9:
             print("Ничья!")
             break
