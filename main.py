@@ -20,10 +20,13 @@ class Person:
     def username(self, value):
         if not value:
             raise ValueError('Имя не может быть пустым!')
-        self.__name = value
+        elif not value.isalpha():
+            raise ValueError('Имя может содержать только буквы!')
+        self.__name = value.title()
 
 player_1 = Person()
 player_2 = Person()
+
 
 def register_players():
 
@@ -60,16 +63,34 @@ def register_players():
     print(f"Игрок 2: {player_2.username}")
 
 
-def choose_first_player(pla):
-    print('Выбирите игрока, кто будет делать первый ход:'
-          '1-Выбрать игрока, который будет делать первый ход случайным образом.')
+def selection_first_player():
+    """ Доделать нормально, сделать цикл"""
+    option = 'Выбирите способ определения игрока, который будет делать первый ход:\n1-Выбрать игрока случайным образом.'
+    print(option)
+    try:
+        selected_option = int(input('Введите номер способа: '))
+        if selected_option == 1:
+            result_selection_first_player = random.choice([player_1.username, player_2.username])
+            print(f'{result_selection_first_player} ходит первым!')
+            return result_selection_first_player
+        else:
+            raise ValueError(f'Некорректный выбор!'
+                             f'Введите число из представленных способов'
+                             f'{option}')
+    except ValueError as e:
+        print(e)
 
-    selected_option = int(input())
-
-    if selected_option == 1:
-        result_option = random.choice([player_1.username, player_2.username])
-        print(f'{result_option} делает первый ход')
+def game():
 
 
-register_players()
+
+
+def main():
+    print('Добро пожаловать в игру "Крестики-нолики!"\nДавайте познакомимся!')
+    register_players()
+    print('Приступим к выбору игрока, который будет делать первый ход!')
+    selection_first_player()
+
+main()
+
 
