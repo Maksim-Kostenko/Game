@@ -34,7 +34,7 @@ player_1 = Person()
 player_2 = Person()
 
 
-result_selection_first_player = None
+
 
 def register_players():
 
@@ -73,14 +73,15 @@ def register_players():
 
 def selection_first_player():
     """ Доделать нормально, сделать цикл"""
-    global result_selection_first_player
     option = 'Выбирите способ определения игрока, который будет делать первый ход:\n1-Выбрать игрока случайным образом.'
     print(option)
     try:
         selected_option = int(input('Введите номер способа: '))
         if selected_option == 1:
-            result_selection_first_player = random.choice([player_1.username, player_2.username])
-            print(f'{result_selection_first_player} ходит первым!')
+            first_player = random.choice([player_1, player_2])
+            second_player = player_2 if first_player == player_1 else player_1
+            print(f'{first_player.username} ходит первым!')
+            return first_player, second_player
         else:
             raise ValueError(f'Некорректный выбор!'
                              f'Введите число из представленных способов'
@@ -88,32 +89,72 @@ def selection_first_player():
     except ValueError as e:
         print(e)
 
-board = list(range(1, 10))
 
-def draw_board(board_1):
+
+def draw_board(board):
     print("-" * 13)
     for i in range(3):
         print("|", board[0 + i * 3], "|", board[1 + i * 3], "|", board[2 + i * 3], "|")
         print("-" * 13)
 
-def take_position(selection, first_player):
-    pass
+def take_position(player_token, board, player):
+    valid = False
+    while not valid:
+        player_answer = input(player + ",куда поставим " + player_token + "? ")
+        try:
+            player_answer = int(player_answer)
+        except ValueError:
+            print("Некорректный ввод. Вы уверены, что ввели число?")
+            continue
+        if 1 <= player_answer <= 9:
+            if str(board[player_answer - 1]) not in "XO":
+                board[player_answer - 1] = player_token
+                valid = True
+            else:
+                print("Эта клетка уже занята!")
+        else:
+            print("Некорректный ввод. Введите число от 1 до 9.")
 
+def check_win(board):
+    win_coord = ((0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6))
+    for each in win_coord:
+        if board[each[0]] == board[each[1]] == board[each[2]]:
+            return board[each[0]]
+    return False
 
-
-def main(board_1):
+def game(board, first_player, second_player):
+    counter = 0
     win = False
+    while not win:
+        draw_board(board)
+        if counter % 2 == 0:
+            take_position("X", board, first_player.username)
+        else:
+            take_position("O", board, second_player.username)
+        counter += 1
 
+        tmp = check_win(board)
+        if tmp:
+            if (counter + first_player.id) % 2 == 0:
+                print(Person.get_instances()[0].username, "выиграл!")
+                win = True
+                break
+        if counter == 9:
+            print("Ничья!")
+            break
+    draw_board(board)
+
+
+
+def main():
     print('Добро пожаловать в игру "Крестики-нолики!"\nДавайте познакомимся!')
     register_players()
     print('Приступим к выбору игрока, который будет делать первый ход!')
-    selection_first_player()
+    first_player, second_player = selection_first_player()
     print('Приступим к игре!')
-    draw_board(board_1)
-
-    while not win:
-        pass
+    board = list(range(1, 10))
+    game(board, first_player, second_player)
 
 
 if __name__ == '__main__':
-    main(board)
+    main()
