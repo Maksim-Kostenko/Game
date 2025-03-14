@@ -145,7 +145,7 @@ def game(board, first_player, second_player):
             print(first_player.username, "выиграл!")
 
         if counter == 9:
-            print("Ничья!")
+            print("Ничья!.")
             break
     draw_board(board)
 
