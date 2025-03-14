@@ -80,8 +80,13 @@ def selection_first_player():
     except ValueError as e:
         print(e)
 
-def game():
+board = list(range(1, 10))
 
+def draw_board(board_1):
+    print("-" * 13)
+    for i in range(3):
+        print("|", board[0 + i * 3], "|", board[1 + i * 3], "|", board[2 + i * 3], "|")
+        print("-" * 13)
 
 
 
@@ -90,7 +95,6 @@ def main():
     register_players()
     print('Приступим к выбору игрока, который будет делать первый ход!')
     selection_first_player()
-
-main()
+    print('Приступим к игре!')
 
 
